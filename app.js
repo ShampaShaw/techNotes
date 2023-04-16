@@ -12,6 +12,10 @@ const mongoose = require('mongoose')
 const { logEvents } = require('./middleware/logger')
 const PORT = process.env.PORT || 3500
 
+//mongoose.connect(process.env.DATABASE_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+//.then(() => console.log("Connection successful!"))
+//.catch((err) => console.log("Connection SUCKS!", err.message));
+
 console.log(process.env.NODE_ENV)
 
 connectDB()
@@ -30,6 +34,8 @@ app.use('/',express.static(path.join(__dirname, '/public')))
 
 app.use('/',require('./routes/root'))
 
+app.use('/users' , require('./routes/userRoutes'))
+
 app.all('*', (req,res) => {
     res.status(404)
     if(req.accepts('html')){
@@ -44,6 +50,8 @@ app.all('*', (req,res) => {
 })
 
 app.use(errorHandler)
+
+
 
 mongoose.connection.once('open', () => {
     console.log('Connected to mongoDB')
